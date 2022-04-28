@@ -10,8 +10,6 @@ parser.add_argument('infile', metavar='-ip', type=str, nargs='+', help='OpenSWAT
 
 args = parser.parse_args()
 
-#infile = "OSCC_Crude_Chewers_Smokers_Multi-Consesus_Spec_Lib.tsv"
-
 def get_header_idx(infile):
     with open(infile) as file:
         for i in islice(file, 0, 1):
@@ -116,10 +114,12 @@ def extract_features(infile):
     frag_ions = {}
     pep_frags = {}
     pro_peps = {}
+    pep_len_freq = {}
     with open(infile) as file:
         for i in islice(file, 1, None):
             split_i = i.rstrip().split('\t')
             pep_len = str(len(split_i[a[0]]))
+            pep_len_freq[split_i[a[0]] + '@' + pep_len] = [pep_len]
             if pep_len not in pep_lens:
                 pep_lens[pep_len] = [split_i[a[1]]]
             else:
@@ -162,6 +162,11 @@ def extract_features(infile):
     pro_peps_output = extract_dicts(pro_peps)
     pep_frags_output = count_dicts_keys(pep_frags)
     frags_frequency = get_frequency_input(pep_frags)
+
+    pep_lens_freq_outfile = "{0}SpecLib_peptide_length_frequency.txt".format(infile.rstrip(".tsv"))
+    with open(pep_lens_freq_outfile, "w") as outf:
+        outf.write("Peptide\tLength\n")
+        outf.writelines("\t".join(i) + '\n' for i in [j.split('@') for j in sorted(pep_len_freq)])
 
     frags_frequency_outfile = "{0}SpecLib_peptide_fragment_frequency.txt".format(infile.rstrip(".tsv"))
     with open(frags_frequency_outfile, "w") as outf:
