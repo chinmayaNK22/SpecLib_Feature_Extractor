@@ -44,6 +44,14 @@ def extract_dicts(indict):
             output.append([str(key), str(len(peps)), str(len(peps)/sum_total*100)])
     return output
 
+
+def get_frequency_input(indict):
+    output = []
+    for k, v in indict.items():
+        output.append([k.replace('@','_'), str(len(v))])
+
+    return output
+
 def count_dicts_keys(indict):
     count_keys = {}
     for key, values in indict.items():
@@ -153,7 +161,13 @@ def extract_features(infile):
     frag_ions_output = extract_dicts(frag_ions)
     pro_peps_output = extract_dicts(pro_peps)
     pep_frags_output = count_dicts_keys(pep_frags)
+    frags_frequency = get_frequency_input(pep_frags)
 
+    frags_frequency_outfile = "{0}SpecLib_peptide_fragment_frequency.txt".format(infile.rstrip(".tsv"))
+    with open(frags_frequency_outfile, "w") as outf:
+        outf.write("Peptide precursor\tNo. of Fragments\n")
+        outf.writelines("\t".join(i) + '\n' for i in frags_frequency)
+    
     pep_lens_outfile = "{0}SpecLib_peptide_length_summary.txt".format(infile.rstrip(".tsv"))
     with open(pep_lens_outfile, "w") as outf:
         outf.write("Peptide length\tNo. of Peptides\tPercentage(%)\n")
