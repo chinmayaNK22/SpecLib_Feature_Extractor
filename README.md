@@ -1,7 +1,7 @@
 # SpecLib_Feature_Extractor
 Extracts the features of peptide spectral library for better understanding and its efficient usage in DIA database search
 
-# How to run SpecLib_Feature_Extractor
+# How to run SpecLib_Feature_Extractor in Windows/Linux
 ```
 >python Speclib_feature_extractor.py -h
 usage: Speclib_feature_extractor.py [-h] -ip [-ip ...]
